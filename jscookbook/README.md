@@ -21,7 +21,7 @@ Native Kotlin + Jetpack Compose, offline-first (Room), with Supabase sync betwee
 - Android SDK Platform **37** (Android 17) and a current Build Tools. Android Studio offers to install them on first sync.
 - Phones with USB debugging on. Tested targets: Pixel 11 Pro and Pixel 7 Pro (the performance floor), both Android 17.
 
-The build uses the Gradle wrapper (Gradle 9.5.0), AGP 9.3.2 with built-in Kotlin, Kotlin 2.4.20 and the Compose BOM 2026.09.00. Versions live in `gradle/libs.versions.toml`.
+The build uses the Gradle wrapper (Gradle 9.5.0), AGP 9.3.3 with built-in Kotlin, Kotlin 2.4.20 and the Compose BOM 2026.09.00. Versions live in `gradle/libs.versions.toml`.
 
 ## Setup
 

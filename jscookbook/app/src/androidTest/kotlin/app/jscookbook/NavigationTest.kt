@@ -1,5 +1,6 @@
 package app.jscookbook
 
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -8,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
@@ -56,8 +58,9 @@ class NavigationTest {
     @Test
     fun tappingVersionSevenTimesOpensDesignSystem() {
         compose.onNodeWithTag("nav:settings").performClick()
+        // The floating bar can cover the row on short screens, so click via semantics, not a touch.
         val version = compose.onNodeWithTag("settings:version").performScrollTo()
-        repeat(7) { version.performClick() }
+        repeat(7) { version.performSemanticsAction(SemanticsActions.OnClick) }
 
         compose.onNodeWithTag("screen:design_system").assertIsDisplayed()
 
