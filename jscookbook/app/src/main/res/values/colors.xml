@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Window and splash colors. The Compose theme in :core:designsystem is the source of truth. -->
+    <color name="bm_cloud_white">#FFF2F1E6</color>
+    <color name="derived_warm_charcoal">#FF1E1B19</color>
+    <color name="bm_terra_cotta_tile">#FFA14C3E</color>
+    <color name="bm_georgetown_pink_beige">#FFDFC1AB</color>
+</resources>

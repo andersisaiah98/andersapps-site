@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Steam -->
+    <path
+        android:pathData="M43,49 C39.5,45 46.5,41.5 43,37"
+        android:strokeWidth="3.6"
+        android:strokeColor="@color/bm_cloud_white"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M54,47 C50.5,42 57.5,38 54,32"
+        android:strokeWidth="3.6"
+        android:strokeColor="@color/bm_cloud_white"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M65,49 C61.5,45 68.5,41.5 65,37"
+        android:strokeWidth="3.6"
+        android:strokeColor="@color/bm_cloud_white"
+        android:strokeLineCap="round" />
+    <!-- Bowl -->
+    <path
+        android:fillColor="@color/bm_cloud_white"
+        android:pathData="M31,55 L77,55 C77,68.5 66.7,78 54,78 C41.3,78 31,68.5 31,55 Z" />
+    <!-- Foot -->
+    <path
+        android:fillColor="@color/bm_cloud_white"
+        android:pathData="M46.5,79.5 L61.5,79.5 C62.6,79.5 63.5,80.4 63.5,81.5 C63.5,82.6 62.6,83.5 61.5,83.5 L46.5,83.5 C45.4,83.5 44.5,82.6 44.5,81.5 C44.5,80.4 45.4,79.5 46.5,79.5 Z" />
+    <!-- Soup surface -->
+    <path
+        android:fillColor="@color/bm_georgetown_pink_beige"
+        android:pathData="M33,55 A21,3.6 0 1,0 75,55 A21,3.6 0 1,0 33,55 Z" />
+</vector>

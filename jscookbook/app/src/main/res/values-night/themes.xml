@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.JsCookBook" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/derived_warm_charcoal</item>
+        <item name="android:windowSplashScreenBackground">@color/derived_warm_charcoal</item>
+        <item name="android:ambientShadowAlpha">0.10</item>
+        <item name="android:spotShadowAlpha">0.30</item>
+    </style>
+</resources>

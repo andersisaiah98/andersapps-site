@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Only the window before Compose draws. Everything else is JsTheme. -->
+    <style name="Theme.JsCookBook" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/bm_cloud_white</item>
+        <item name="android:windowSplashScreenBackground">@color/bm_cloud_white</item>
+        <!-- Softer, warmer hardware shadows than the platform defaults (0.039 / 0.19). -->
+        <item name="android:ambientShadowAlpha">0.06</item>
+        <item name="android:spotShadowAlpha">0.16</item>
+    </style>
+</resources>
