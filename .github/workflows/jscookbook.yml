@@ -38,6 +38,13 @@ jobs:
           path: jscookbook/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
 
+      - name: Upload Room schemas
+        uses: actions/upload-artifact@v4
+        with:
+          name: room-schemas
+          path: jscookbook/core/data/schemas/
+          if-no-files-found: ignore
+
       - name: Upload test reports
         if: failure()
         uses: actions/upload-artifact@v4
