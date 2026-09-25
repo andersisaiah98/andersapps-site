@@ -30,6 +30,8 @@ fun RecipeTile(
     modifier: Modifier = Modifier,
     note: String? = null,
     aspectRatio: Float = 4f / 5f,
+    /** Applied to the image, e.g. a shared-element modifier for the tile → detail transition. */
+    imageModifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val shape = JsTheme.shapes.tile
@@ -48,6 +50,7 @@ fun RecipeTile(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(aspectRatio)
+                .then(imageModifier)
                 .softShadow(JsElevations.Resting, shape, JsTheme.extendedColors.shadow)
                 .clip(shape),
         )

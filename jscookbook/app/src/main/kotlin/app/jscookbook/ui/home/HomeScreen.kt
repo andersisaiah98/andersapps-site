@@ -52,6 +52,21 @@ import app.jscookbook.core.designsystem.theme.JsTheme
 import app.jscookbook.ui.common.StaggeredEntrance
 import app.jscookbook.ui.common.rememberEntrance
 import app.jscookbook.ui.common.screenPadding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.jscookbook.core.designsystem.component.JsButton
+import app.jscookbook.core.designsystem.component.JsCard
+import app.jscookbook.core.designsystem.recipeimage.vector
+import app.jscookbook.core.model.RecipeSummary
+import app.jscookbook.core.model.formatMinutes
+import app.jscookbook.ui.common.LocalMessenger
+import app.jscookbook.ui.common.TileOrigin
+import app.jscookbook.ui.common.imageRequest
+import app.jscookbook.ui.common.recipeImageSharedElement
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -64,10 +79,30 @@ enum class QuickAction(val comingSoon: String) {
 }
 
 @Composable
+fun HomeRoute(
+    contentPadding: PaddingValues,
+    onRecipeClick: (id: String, origin: String) -> Unit,
+    onNewRecipe: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val messenger = LocalMessenger.current
+    HomeScreen(
+        uiState = uiState,
+        contentPadding = contentPadding,
+        onQuickAction = { messenger.show(it.comingSoon) },
+        onRecipeClick = onRecipeClick,
+        onNewRecipe = onNewRecipe,
+    )
+}
+
+@Composable
 fun HomeScreen(
+    uiState: HomeUiState,
     contentPadding: PaddingValues,
     onQuickAction: (QuickAction) -> Unit,
-    onRecipeClick: (SampleRecipe) -> Unit,
+    onRecipeClick: (id: String, origin: String) -> Unit,
+    onNewRecipe: () -> Unit,
     modifier: Modifier = Modifier,
     now: LocalDateTime = remember { LocalDateTime.now() },
 ) {
@@ -83,16 +118,55 @@ fun HomeScreen(
                 Greeting(now)
             }
         }
+        if (uiState.isEmpty) {
+            item(key = "empty") {
+                StaggeredEntrance(entrance, index = 1, modifier = Modifier.padding(horizontal = 20.dp)) {
+                    FirstRecipeCard(onNewRecipe)
+                }
+            }
+        }
         item(key = "quick") {
-            StaggeredEntrance(entrance, index = 1, modifier = Modifier.padding(horizontal = 20.dp)) {
+            StaggeredEntrance(entrance, index = 2, modifier = Modifier.padding(horizontal = 20.dp)) {
                 QuickActions(onQuickAction)
             }
         }
-        item(key = "recent") {
-            StaggeredEntrance(entrance, index = 2) { RecentlyMade(onRecipeClick) }
+        if (uiState.recentlyAdded.isNotEmpty()) {
+            item(key = "recent") {
+                StaggeredEntrance(entrance, index = 3) {
+                    RecentlyAdded(uiState.recentlyAdded) { onRecipeClick(it, TileOrigin.HomeRecent) }
+                }
+            }
         }
-        item(key = "favorites") {
-            StaggeredEntrance(entrance, index = 3) { Favorites(onRecipeClick) }
+        if (uiState.favorites.isNotEmpty()) {
+            item(key = "favorites") {
+                StaggeredEntrance(entrance, index = 4) {
+                    Favorites(uiState.favorites) { onRecipeClick(it, TileOrigin.HomeFavorites) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun FirstRecipeCard(onNewRecipe: () -> Unit) {
+    JsCard(modifier = Modifier.fillMaxWidth(), color = JsTheme.colors.surfaceContainer) {
+        Row(Modifier.padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text("Start the cook book", style = JsTheme.typography.titleLarge)
+                Text(
+                    "Add a favorite recipe. Photos are optional; every recipe gets its own art.",
+                    style = JsTheme.typography.bodyMedium,
+                    color = JsTheme.colors.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 12.dp),
+                )
+                JsButton("Add a recipe", onClick = onNewRecipe, icon = JsIcons.Plus)
+            }
+            Image(
+                imageVector = FoodIllustration.Loaf.vector,
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(JsTheme.extendedColors.brandText),
+                modifier = Modifier.padding(start = 12.dp).size(88.dp),
+            )
         }
     }
 }
@@ -192,26 +266,23 @@ private fun QuickActions(onQuickAction: (QuickAction) -> Unit) {
 }
 
 @Composable
-private fun RecentlyMade(onRecipeClick: (SampleRecipe) -> Unit) {
+private fun RecentlyAdded(recipes: List<RecipeSummary>, onRecipeClick: (String) -> Unit) {
     val provider = LocalRecipeImageProvider.current
     Column {
-        SectionHeader(
-            title = "Recently made",
-            subtitle = "Sample recipes for now",
-            modifier = Modifier.padding(horizontal = 20.dp),
-        )
+        SectionHeader(title = "Recently added", modifier = Modifier.padding(horizontal = 20.dp))
         LazyRow(
             modifier = Modifier.padding(top = 14.dp),
             contentPadding = PaddingValues(horizontal = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            items(SampleRecipes, key = { it.title }) { recipe ->
+            items(recipes, key = { it.id }) { recipe ->
                 RecipeTile(
                     title = recipe.title,
-                    image = remember(recipe) { provider.imageFor(recipe.imageRequest) },
-                    note = recipe.note,
-                    onClick = { onRecipeClick(recipe) },
+                    image = remember(recipe) { provider.imageFor(recipe.imageRequest()) },
+                    note = recipe.totalMinutes?.let(::formatMinutes) ?: recipe.type?.label,
+                    onClick = { onRecipeClick(recipe.id) },
                     modifier = Modifier.width(148.dp),
+                    imageModifier = Modifier.recipeImageSharedElement(recipe.id, TileOrigin.HomeRecent),
                 )
             }
         }
@@ -220,13 +291,12 @@ private fun RecentlyMade(onRecipeClick: (SampleRecipe) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Favorites(onRecipeClick: (SampleRecipe) -> Unit) {
+private fun Favorites(favorites: List<RecipeSummary>, onRecipeClick: (String) -> Unit) {
     val provider = LocalRecipeImageProvider.current
-    val favorites = remember { SampleRecipes.filter { it.favorite } }
     Column {
         SectionHeader(
             title = "Favorites",
-            subtitle = "Swipe through",
+            subtitle = if (favorites.size > 1) "Swipe through" else null,
             modifier = Modifier.padding(horizontal = 20.dp),
         )
         HorizontalMultiBrowseCarousel(
@@ -241,11 +311,11 @@ private fun Favorites(onRecipeClick: (SampleRecipe) -> Unit) {
                 Modifier
                     .fillMaxSize()
                     .maskClip(JsTheme.shapes.tile)
-                    .clickable(role = Role.Button, onClickLabel = "Open ${recipe.title}") { onRecipeClick(recipe) },
+                    .clickable(role = Role.Button, onClickLabel = "Open ${recipe.title}") { onRecipeClick(recipe.id) },
             ) {
                 RecipeArt(
-                    image = remember(recipe) { provider.imageFor(recipe.imageRequest) },
-                    modifier = Modifier.fillMaxSize(),
+                    image = remember(recipe) { provider.imageFor(recipe.imageRequest()) },
+                    modifier = Modifier.fillMaxSize().recipeImageSharedElement(recipe.id, TileOrigin.HomeFavorites),
                 )
                 Box(
                     Modifier

@@ -37,7 +37,7 @@ import app.jscookbook.core.designsystem.recipeimage.FallbackArtImage
 import app.jscookbook.core.designsystem.recipeimage.FallbackArtSelector
 import app.jscookbook.core.designsystem.recipeimage.FallbackTints
 import app.jscookbook.core.designsystem.recipeimage.FoodIllustration
-import app.jscookbook.core.designsystem.recipeimage.RecipeType
+import app.jscookbook.core.model.RecipeType
 import app.jscookbook.core.designsystem.theme.JsTheme
 
 @OptIn(ExperimentalLayoutApi::class)

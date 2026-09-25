@@ -1,7 +1,6 @@
 package app.jscookbook.core.designsystem.recipeimage
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,24 +13,34 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import app.jscookbook.core.designsystem.theme.FrauncesDisplay
 import app.jscookbook.core.designsystem.theme.JsTheme
+import coil3.compose.AsyncImage
+import java.io.File
 
-/**
- * Draws a recipe's tile image: the photo when there is one, otherwise its fallback art.
- * Photos are drawn by the image loader added in Phase 1; until then they show a placeholder.
- */
+/** Draws a recipe's tile image: the photo when there is one, otherwise its fallback art. */
 @Composable
-fun RecipeArt(image: RecipeImage, modifier: Modifier = Modifier) {
+fun RecipeArt(image: RecipeImage, modifier: Modifier = Modifier, contentDescription: String? = null) {
     when (image) {
         is RecipeImage.Fallback -> FallbackArtImage(image.art, modifier)
-        is RecipeImage.Photo, is RecipeImage.Generated ->
-            Box(modifier.background(JsTheme.colors.surfaceVariant))
+        is RecipeImage.Photo -> PhotoArt(image.model, modifier, contentDescription)
+        is RecipeImage.Generated -> PhotoArt(image.model, modifier, contentDescription)
     }
+}
+
+@Composable
+private fun PhotoArt(model: Any, modifier: Modifier, contentDescription: String?) {
+    AsyncImage(
+        model = if (model is String && model.startsWith("/")) File(model) else model,
+        contentDescription = contentDescription,
+        contentScale = ContentScale.Crop,
+        modifier = modifier.background(JsTheme.colors.surfaceVariant),
+    )
 }
 
 /**

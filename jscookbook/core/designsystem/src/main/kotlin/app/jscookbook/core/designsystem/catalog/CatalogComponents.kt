@@ -27,7 +27,7 @@ import app.jscookbook.core.designsystem.icon.JsIcons
 import app.jscookbook.core.designsystem.recipeimage.DefaultRecipeImageProvider
 import app.jscookbook.core.designsystem.recipeimage.FoodIllustration
 import app.jscookbook.core.designsystem.recipeimage.RecipeImageRequest
-import app.jscookbook.core.designsystem.recipeimage.RecipeType
+import app.jscookbook.core.model.RecipeType
 import app.jscookbook.core.designsystem.theme.JsTheme
 
 @OptIn(ExperimentalLayoutApi::class)

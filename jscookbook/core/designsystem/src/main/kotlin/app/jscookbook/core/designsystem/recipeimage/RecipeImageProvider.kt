@@ -2,19 +2,8 @@ package app.jscookbook.core.designsystem.recipeimage
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
-
-/** Stored per recipe: where its tile image comes from. */
-enum class ImageSource { PHOTO, FALLBACK, AI }
-
-enum class RecipeType(val label: String) {
-    Breakfast("Breakfast"),
-    Meal("Meal"),
-    Snack("Snack"),
-    Side("Side"),
-    Dessert("Dessert"),
-    Drink("Drink"),
-    Sauce("Sauce"),
-}
+import app.jscookbook.core.model.ImageSource
+import app.jscookbook.core.model.RecipeType
 
 /** What a tile knows about its recipe when it asks for an image. */
 @Immutable

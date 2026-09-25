@@ -77,6 +77,66 @@ object JsIcons {
         }
     }
 
+    val Star: ImageVector by lazy {
+        icon("Star") { line { star() } }
+    }
+
+    val StarFilled: ImageVector by lazy {
+        icon("StarFilled") {
+            solid { star() }
+            line { star() }
+        }
+    }
+
+    val Trash: ImageVector by lazy {
+        icon("Trash") {
+            line {
+                moveTo(4.5f, 7f); lineTo(19.5f, 7f)
+                moveTo(9.5f, 7f); lineTo(9.5f, 5f); curveTo(9.5f, 4.45f, 9.95f, 4f, 10.5f, 4f)
+                lineTo(13.5f, 4f); curveTo(14.05f, 4f, 14.5f, 4.45f, 14.5f, 5f); lineTo(14.5f, 7f)
+                moveTo(6.5f, 7f); lineTo(7.4f, 18.6f); curveTo(7.5f, 19.4f, 8.1f, 20f, 8.9f, 20f)
+                lineTo(15.1f, 20f); curveTo(15.9f, 20f, 16.5f, 19.4f, 16.6f, 18.6f); lineTo(17.5f, 7f)
+                moveTo(10.5f, 11f); lineTo(10.5f, 16f)
+                moveTo(13.5f, 11f); lineTo(13.5f, 16f)
+            }
+        }
+    }
+
+    val ArrowUp: ImageVector by lazy {
+        icon("ArrowUp") { line { moveTo(12f, 19f); lineTo(12f, 5.5f); moveTo(6.5f, 11f); lineTo(12f, 5.5f); lineTo(17.5f, 11f) } }
+    }
+
+    val ArrowDown: ImageVector by lazy {
+        icon("ArrowDown") { line { moveTo(12f, 5f); lineTo(12f, 18.5f); moveTo(6.5f, 13f); lineTo(12f, 18.5f); lineTo(17.5f, 13f) } }
+    }
+
+    val Timer: ImageVector by lazy {
+        icon("Timer") {
+            line { circle(12f, 13.5f, 7f) }
+            line { moveTo(12f, 13.5f); lineTo(12f, 10f); moveTo(10f, 3.5f); lineTo(14f, 3.5f); moveTo(18f, 7f); lineTo(19.2f, 5.8f) }
+        }
+    }
+
+    val Link: ImageVector by lazy {
+        icon("Link") {
+            line {
+                moveTo(10f, 14f); curveTo(11.4f, 15.4f, 13.6f, 15.4f, 15f, 14f); lineTo(18f, 11f)
+                curveTo(19.4f, 9.6f, 19.4f, 7.4f, 18f, 6f); curveTo(16.6f, 4.6f, 14.4f, 4.6f, 13f, 6f); lineTo(12f, 7f)
+                moveTo(14f, 10f); curveTo(12.6f, 8.6f, 10.4f, 8.6f, 9f, 10f); lineTo(6f, 13f)
+                curveTo(4.6f, 14.4f, 4.6f, 16.6f, 6f, 18f); curveTo(7.4f, 19.4f, 9.6f, 19.4f, 11f, 18f); lineTo(12f, 17f)
+            }
+        }
+    }
+
+    val Image: ImageVector by lazy {
+        icon("Image") {
+            wash { roundRect(3.5f, 5f, 20.5f, 19f, 3f) }
+            line { roundRect(3.5f, 5f, 20.5f, 19f, 3f) }
+            line { moveTo(4f, 16.5f); lineTo(9f, 11.5f); lineTo(13f, 15.5f); lineTo(15.5f, 13f); lineTo(20f, 17.5f) }
+            solid { circle(15.5f, 9f, 1.5f) }
+        }
+    }
+
     val Clock: ImageVector by lazy {
         icon("Clock") {
             line { circle(12f, 12f, 8f) }
@@ -242,7 +302,8 @@ object JsIcons {
             "Camera" to Camera, "Folder" to Folder, "Pencil" to Pencil, "Dice" to Dice,
             "Bolt" to Bolt, "Hourglass" to Hourglass, "Cookie" to Cookie, "Person" to Person,
             "People" to People, "Contrast" to Contrast, "Export" to Export, "Info" to Info,
-            "Cloud" to Cloud, "Sparkle" to Sparkle,
+            "Cloud" to Cloud, "Sparkle" to Sparkle, "Star" to Star, "StarFilled" to StarFilled,
+            "Trash" to Trash, "ArrowUp" to ArrowUp, "ArrowDown" to ArrowDown, "Timer" to Timer, "Link" to Link, "Image" to Image,
         )
     }
 
@@ -375,6 +436,11 @@ private fun PathBuilder.folder() {
 private fun PathBuilder.bolt() {
     moveTo(13f, 3.5f); lineTo(6f, 13.5f); lineTo(11.5f, 13.5f); lineTo(10.5f, 20.5f)
     lineTo(18f, 10f); lineTo(12.5f, 10f); close()
+}
+
+private fun PathBuilder.star() {
+    moveTo(12f, 3.8f); lineTo(14.4f, 8.9f); lineTo(20f, 9.6f); lineTo(15.9f, 13.4f); lineTo(17f, 19f)
+    lineTo(12f, 16.2f); lineTo(7f, 19f); lineTo(8.1f, 13.4f); lineTo(4f, 9.6f); lineTo(9.6f, 8.9f); close()
 }
 
 private fun PathBuilder.sparkle() {

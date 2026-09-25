@@ -38,11 +38,10 @@ enum class AddChoice(
     val title: String,
     val subtitle: String,
     val icon: ImageVector,
-    val comingSoon: String,
 ) {
-    NewRecipe("New recipe", "Type it in, step by step", JsIcons.Pencil, "New recipes arrive in Phase 1."),
-    SnapPhoto("Snap a photo", "Start from the dish or a cookbook page", JsIcons.Camera, "The camera arrives in Phase 1."),
-    NewCategory("New category", "A shelf like Soups or Weeknight", JsIcons.Folder, "Categories arrive in Phase 1."),
+    NewRecipe("New recipe", "Type it in, step by step", JsIcons.Pencil),
+    SnapPhoto("Snap a photo", "Start from the dish or a cookbook page", JsIcons.Camera),
+    NewCategory("New category", "A shelf like Soups or Weeknight", JsIcons.Folder),
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

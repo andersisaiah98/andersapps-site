@@ -55,6 +55,7 @@ import app.jscookbook.core.designsystem.component.JsSegmentedControl
 import app.jscookbook.core.designsystem.icon.JsIcons
 import app.jscookbook.core.designsystem.theme.JsTheme
 import app.jscookbook.data.ThemeMode
+import app.jscookbook.ui.common.LocalMessenger
 import app.jscookbook.ui.common.ScreenTitle
 import app.jscookbook.ui.common.screenPadding
 
@@ -65,15 +66,15 @@ private const val TapWindowMillis = 1_500L
 fun SettingsRoute(
     contentPadding: PaddingValues,
     onOpenDesignSystem: () -> Unit,
-    showMessage: (String) -> Unit,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val messenger = LocalMessenger.current
     SettingsScreen(
         uiState = uiState,
         onThemeModeChange = viewModel::onThemeModeChange,
         onOpenDesignSystem = onOpenDesignSystem,
-        showMessage = showMessage,
+        showMessage = { messenger.show(it) },
         versionLabel = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
         loadFontLicenses = rememberFontLicenseLoader(),
         contentPadding = contentPadding,

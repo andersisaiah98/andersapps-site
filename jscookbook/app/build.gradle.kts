@@ -61,6 +61,7 @@ kotlin {
 
 dependencies {
     implementation(project(":core:designsystem"))
+    implementation(project(":core:data"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -77,6 +78,9 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.coil.compose)
+    implementation(libs.telephoto.zoomable.image.coil3)
+    implementation(libs.telephoto.flick)
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)

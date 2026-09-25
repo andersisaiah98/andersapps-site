@@ -16,6 +16,7 @@ import app.jscookbook.core.designsystem.recipeimage.FoodIllustration.Skillet
 import app.jscookbook.core.designsystem.recipeimage.FoodIllustration.Whisk
 import app.jscookbook.core.designsystem.theme.BM
 import app.jscookbook.core.designsystem.theme.Derived
+import app.jscookbook.core.model.RecipeType
 
 enum class FoodIllustration(val label: String) {
     Bowl("Bowl"),
@@ -30,6 +31,12 @@ enum class FoodIllustration(val label: String) {
     Jar("Jar"),
     Loaf("Loaf"),
     Egg("Egg"),
+    ;
+
+    companion object {
+        /** The illustration stored under [key] (a category icon), falling back to the bowl. */
+        fun fromKey(key: String): FoodIllustration = entries.firstOrNull { it.name == key } ?: Bowl
+    }
 }
 
 /** A tile background and the ink its illustration and initial are drawn in. */

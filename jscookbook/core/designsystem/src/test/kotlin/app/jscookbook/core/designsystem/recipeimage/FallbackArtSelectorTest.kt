@@ -2,6 +2,8 @@ package app.jscookbook.core.designsystem.recipeimage
 
 import app.jscookbook.core.designsystem.component.CardPalettes
 import app.jscookbook.core.designsystem.theme.contrastRatio
+import app.jscookbook.core.model.ImageSource
+import app.jscookbook.core.model.RecipeType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue

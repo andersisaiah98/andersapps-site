@@ -21,6 +21,19 @@ object Routes {
     @Serializable data object Settings
 
     @Serializable data object DesignSystem
+
+    @Serializable data class RecipeDetail(val recipeId: String, val origin: String)
+
+    /** No [recipeId] means a new recipe; [categoryId] preselects a category; [camera] opens the camera first. */
+    @Serializable data class RecipeEditor(
+        val recipeId: String? = null,
+        val categoryId: String? = null,
+        val camera: Boolean = false,
+    )
+
+    @Serializable data class CategoryRecipes(val categoryId: String)
+
+    @Serializable data class PhotoViewer(val recipeId: String, val index: Int)
 }
 
 /** The four bottom-bar destinations. The raised ＋ in the middle is an action, not a destination. */
