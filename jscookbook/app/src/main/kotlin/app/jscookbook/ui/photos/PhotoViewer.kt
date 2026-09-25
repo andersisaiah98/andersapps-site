@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import me.saket.telephoto.ExperimentalTelephotoApi
 import me.saket.telephoto.flick.FlickToDismiss
 import me.saket.telephoto.flick.FlickToDismissState
 import me.saket.telephoto.flick.rememberFlickToDismissState
@@ -73,6 +74,7 @@ fun PhotoViewerRoute(onClose: () -> Unit, viewModel: PhotoViewerViewModel = hilt
  * Full-screen photos: pinch to zoom with rubber-band edges, double-tap to zoom to the tap point,
  * fling with momentum, swipe sideways between photos, and flick down (or up) to dismiss.
  */
+@OptIn(ExperimentalTelephotoApi::class)
 @Composable
 fun PhotoViewer(photos: List<Photo>, startIndex: Int, onClose: () -> Unit) {
     val pagerState = rememberPagerState(initialPage = startIndex) { photos.size }
