@@ -8,8 +8,8 @@ Native Kotlin + Jetpack Compose, offline-first (Room), with Supabase sync betwee
 
 | Phase | What | State |
 |---|---|---|
-| 0 | Foundation: scaffold, theme and tokens (light + dark), bundled fonts, bottom navigation shell, fallback art, hidden design-system screen | **Done, awaiting review** |
-| 1 | Local core: Room, recipe/category CRUD, detail, grid, shared-element tile → detail, photo viewer | Not started |
+| 0 | Foundation: scaffold, theme and tokens (light + dark), bundled fonts, bottom navigation shell, fallback art, hidden design-system screen | Done |
+| 1 | Local core: Room, recipe/category CRUD, detail, grid, shared-element tile → detail, photo viewer | **Done, awaiting review** |
 | 2 | Sync: Supabase schema + RLS, auth, household, sync engine, photo uploads, Realtime | Not started |
 | 3 | Cook log + Journal, quick actions + randomizer, cooking mode, search + filters | Not started |
 | 4 | Drag to organize, pinch grid density, swipe actions, haptics pass, Baseline Profiles, jank check | Not started |
@@ -43,6 +43,14 @@ Fill these in on your machine only. Never commit them, and never paste them into
 
 Phases 0 and 1 sign everything with the debug key. Before Phase 2 you'll create a release keystore on your machine; its SHA-1 is needed for Google sign-in. The exact `keytool` command and the gitignored `keystore.properties` format will be added here at the start of Phase 2.
 
+## Get the APK without building
+
+Every push that touches `jscookbook/` is built by GitHub Actions (`.github/workflows/jscookbook.yml`), which also runs the unit tests.
+
+1. Open the repo on GitHub › **Actions** › **J's Cook Book** › the latest green run.
+2. Under **Artifacts**, download **jscookbook-debug-apk**. It's a zip; inside is `app-debug.apk`.
+3. Install it: `adb install -r app-debug.apk`, or copy it to the phone and open it (allow "Install unknown apps" for your file manager when asked).
+
 ## Build and install
 
 With both phones plugged in and authorized (`adb devices` lists both):
@@ -69,8 +77,8 @@ adb -s <serial> install -r app/build/outputs/apk/release/app-release.apk
 ## Tests
 
 ```sh
-./gradlew :core:designsystem:testDebugUnitTest   # fallback-art determinism, palette contrast
-./gradlew connectedDebugAndroidTest              # navigation UI test, runs on each connected phone
+./gradlew testDebugUnitTest :core:model:test   # all unit tests (also run on CI)
+./gradlew connectedDebugAndroidTest            # UI tests, run on each connected phone
 ```
 
 ## Project layout
@@ -80,7 +88,11 @@ jscookbook/
   app/                      Single activity, navigation shell, screens
     ui/navigation/          Type-safe routes, NavHost, the floating bottom bar with the raised ＋
     ui/home, cookbook, journal, settings, add
+    ui/detail, editor, category, photos
     data/, di/              Settings (DataStore) and Hilt wiring
+  core/model/               Plain Kotlin: recipe models, ingredient parser
+  core/data/                Room database (the source of truth), repositories, on-device photo store
+    schemas/                Exported Room schemas (committed; every change gets a migration)
   core/designsystem/        Everything visual, shared by every screen
     theme/                  BM color tokens, light/dark schemes, type, shapes, elevation, springs
     component/              Buttons, cards, tiles, quick-action cards, segmented control, haptics
@@ -90,7 +102,7 @@ jscookbook/
   licenses/                 SIL Open Font License texts for the bundled fonts
 ```
 
-Later phases add `:core:data` (Room + sync), `:baselineprofile` and `:macrobenchmark`.
+Later phases add sync to `:core:data`, plus `:baselineprofile` and `:macrobenchmark`.
 
 ## Design system
 
