@@ -5,6 +5,8 @@ import androidx.room.Room
 import app.jscookbook.core.data.db.CategoryDao
 import app.jscookbook.core.data.db.CookbookDao
 import app.jscookbook.core.data.db.JsCookBookDatabase
+import app.jscookbook.core.data.db.MIGRATION_1_2
+import app.jscookbook.core.data.db.SyncDao
 import app.jscookbook.core.data.repository.Clock
 import dagger.Module
 import dagger.Provides
@@ -20,13 +22,18 @@ object DataModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): JsCookBookDatabase =
-        Room.databaseBuilder(context, JsCookBookDatabase::class.java, "jscookbook.db").build()
+        Room.databaseBuilder(context, JsCookBookDatabase::class.java, "jscookbook.db")
+            .addMigrations(MIGRATION_1_2)
+            .build()
 
     @Provides
     fun provideCookbookDao(db: JsCookBookDatabase): CookbookDao = db.cookbookDao()
 
     @Provides
     fun provideCategoryDao(db: JsCookBookDatabase): CategoryDao = db.categoryDao()
+
+    @Provides
+    fun provideSyncDao(db: JsCookBookDatabase): SyncDao = db.syncDao()
 
     @Provides
     @Singleton

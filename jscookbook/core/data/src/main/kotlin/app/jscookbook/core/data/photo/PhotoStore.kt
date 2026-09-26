@@ -17,7 +17,7 @@ import kotlin.math.roundToInt
 
 /**
  * Photos live in app-private storage: a full image resized on the device to at most 2048 px on
- * the long edge, and a small thumbnail for grids. Both are JPEGs. Phase 2 uploads them.
+ * the long edge, and a small thumbnail for grids. Both are JPEGs. Sync uploads them to Storage.
  */
 @Singleton
 class PhotoStore @Inject constructor(
@@ -61,6 +61,19 @@ class PhotoStore @Inject constructor(
         photo.thumbnailPath?.let { File(it).delete() }
         Unit
     }
+
+    /** Stores a photo that synced from the other phone. Returns the (full, thumbnail) paths. */
+    suspend fun saveDownloaded(id: String, full: ByteArray, thumbnail: ByteArray): Pair<String, String> =
+        withContext(Dispatchers.IO) {
+            val photoFile = File(photoDir, "$id.jpg")
+            val thumbFile = File(thumbDir, "$id.jpg")
+            // Write to temp names first so a half-written file is never shown.
+            File(photoDir, "$id.jpg.part").apply { writeBytes(full); renameTo(photoFile) }
+            File(thumbDir, "$id.jpg.part").apply { writeBytes(thumbnail); renameTo(thumbFile) }
+            photoFile.absolutePath to thumbFile.absolutePath
+        }
+
+    suspend fun read(path: String): ByteArray = withContext(Dispatchers.IO) { File(path).readBytes() }
 
     private fun decode(uri: Uri, maxEdge: Int): Bitmap {
         val source = ImageDecoder.createSource(context.contentResolver, uri)

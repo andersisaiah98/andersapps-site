@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,7 +32,7 @@ class RecipeRepository @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun observeRecipes(): Flow<List<RecipeSummary>> =
-        flow { emit(cookbook.id()) }
+        cookbook.observeId()
             .flatMapLatest { recipes.observeSummaries(it) }
             .map { rows -> rows.map { it.toModel() } }
 
@@ -112,8 +111,8 @@ class RecipeRepository @Inject constructor(
                     when {
                         link == null -> RecipeCategoryEntity(draft.id, categoryId, owner, now, now)
                         keep && link.deletedAt == null -> link
-                        keep -> link.copy(deletedAt = null, updatedAt = now)
-                        link.deletedAt == null -> link.copy(deletedAt = now, updatedAt = now)
+                        keep -> link.copy(deletedAt = null, updatedAt = now, dirty = true)
+                        link.deletedAt == null -> link.copy(deletedAt = now, updatedAt = now, dirty = true)
                         else -> link
                     }
                 },
@@ -129,7 +128,7 @@ class RecipeRepository @Inject constructor(
                         createdAt = oldIngredients[item.id]?.createdAt ?: now, updatedAt = now,
                     )
                 } + removed(oldIngredients.values, draft.ingredients.map { it.id }.toSet(), { it.id }, { it.deletedAt }) {
-                    it.copy(deletedAt = now, updatedAt = now)
+                    it.copy(deletedAt = now, updatedAt = now, dirty = true)
                 },
             )
 
@@ -142,7 +141,7 @@ class RecipeRepository @Inject constructor(
                         createdAt = oldSteps[step.id]?.createdAt ?: now, updatedAt = now,
                     )
                 } + removed(oldSteps.values, draft.steps.map { it.id }.toSet(), { it.id }, { it.deletedAt }) {
-                    it.copy(deletedAt = now, updatedAt = now)
+                    it.copy(deletedAt = now, updatedAt = now, dirty = true)
                 },
             )
 
@@ -153,13 +152,13 @@ class RecipeRepository @Inject constructor(
                     val old = oldPhotos[photo.id]
                     PhotoEntity(
                         id = photo.id, recipeId = draft.id, cookbookId = owner,
-                        storagePath = old?.storagePath, localPath = photo.localPath, thumbnailPath = photo.thumbnailPath,
+                        storagePath = old?.storagePath, thumbnailStoragePath = old?.thumbnailStoragePath, localPath = photo.localPath, thumbnailPath = photo.thumbnailPath,
                         width = photo.width, height = photo.height, isCover = photo.id == coverId,
                         caption = photo.caption.trim(), position = index,
                         createdAt = old?.createdAt ?: now, updatedAt = now,
                     )
                 } + removed(oldPhotos.values, draft.photos.map { it.id }.toSet(), { it.id }, { it.deletedAt }) {
-                    it.copy(deletedAt = now, updatedAt = now)
+                    it.copy(deletedAt = now, updatedAt = now, dirty = true)
                 },
             )
         }

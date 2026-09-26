@@ -44,7 +44,7 @@ class RecipeRepositoryTest {
         db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), JsCookBookDatabase::class.java)
             .allowMainThreadQueries()
             .build()
-        val cookbook = CurrentCookbook(db.cookbookDao(), clock)
+        val cookbook = CurrentCookbook(db.cookbookDao(), db.syncDao(), clock)
         recipes = RecipeRepository(db, cookbook, clock)
         categories = CategoryRepository(db.categoryDao(), cookbook, clock)
     }

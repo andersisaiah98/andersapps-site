@@ -47,6 +47,9 @@ interface CookbookDao {
     @Query("SELECT * FROM cookbooks WHERE deleted_at IS NULL ORDER BY created_at LIMIT 1")
     suspend fun first(): CookbookEntity?
 
+    @Query("SELECT * FROM cookbooks WHERE id = :id")
+    suspend fun get(id: String): CookbookEntity?
+
     @Upsert
     suspend fun upsert(cookbook: CookbookEntity)
 }
@@ -74,10 +77,10 @@ interface CategoryDao {
     @Upsert
     suspend fun upsert(category: CategoryEntity)
 
-    @Query("UPDATE categories SET deleted_at = :now, updated_at = :now WHERE id = :id")
+    @Query("UPDATE categories SET deleted_at = :now, updated_at = :now, dirty = 1 WHERE id = :id")
     suspend fun softDelete(id: String, now: Long)
 
-    @Query("UPDATE categories SET deleted_at = NULL, updated_at = :now WHERE id = :id")
+    @Query("UPDATE categories SET deleted_at = NULL, updated_at = :now, dirty = 1 WHERE id = :id")
     suspend fun restore(id: String, now: Long)
 }
 
@@ -105,13 +108,13 @@ interface RecipeDao {
     @Upsert
     suspend fun upsert(recipe: RecipeEntity)
 
-    @Query("UPDATE recipes SET is_favorite = :favorite, updated_at = :now WHERE id = :id")
+    @Query("UPDATE recipes SET is_favorite = :favorite, updated_at = :now, dirty = 1 WHERE id = :id")
     suspend fun setFavorite(id: String, favorite: Boolean, now: Long)
 
-    @Query("UPDATE recipes SET deleted_at = :now, updated_at = :now WHERE id = :id")
+    @Query("UPDATE recipes SET deleted_at = :now, updated_at = :now, dirty = 1 WHERE id = :id")
     suspend fun softDelete(id: String, now: Long)
 
-    @Query("UPDATE recipes SET deleted_at = NULL, updated_at = :now WHERE id = :id")
+    @Query("UPDATE recipes SET deleted_at = NULL, updated_at = :now, dirty = 1 WHERE id = :id")
     suspend fun restore(id: String, now: Long)
 }
 

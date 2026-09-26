@@ -6,7 +6,6 @@ import app.jscookbook.core.model.Category
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,7 +18,7 @@ class CategoryRepository @Inject constructor(
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun observeCategories(): Flow<List<Category>> =
-        flow { emit(cookbook.id()) }
+        cookbook.observeId()
             .flatMapLatest { dao.observeWithCounts(it) }
             .map { rows -> rows.map { it.toModel() } }
 
@@ -28,7 +27,7 @@ class CategoryRepository @Inject constructor(
         val now = clock.now()
         val cookbookId = cookbook.id()
         val existing = id?.let { dao.get(it) }
-        val entity = existing?.copy(name = name.trim(), iconKey = iconKey, colorKey = colorKey, updatedAt = now)
+        val entity = existing?.copy(name = name.trim(), iconKey = iconKey, colorKey = colorKey, updatedAt = now, dirty = true)
             ?: CategoryEntity(
                 id = id ?: newId(),
                 cookbookId = cookbookId,
