@@ -50,6 +50,9 @@ interface CookbookDao {
     @Query("SELECT * FROM cookbooks WHERE id = :id")
     suspend fun get(id: String): CookbookEntity?
 
+    @Query("SELECT count(*) FROM cookbook_members WHERE cookbook_id = :id AND deleted_at IS NULL")
+    fun observeMemberCount(id: String): Flow<Int>
+
     @Upsert
     suspend fun upsert(cookbook: CookbookEntity)
 }
