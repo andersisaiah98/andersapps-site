@@ -1,5 +1,6 @@
 package app.jscookbook
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -14,16 +15,21 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.jscookbook.core.designsystem.theme.JsTheme
+import app.jscookbook.core.sync.AccountRepository
 import app.jscookbook.ui.JsCookBookApp
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    @Inject lateinit var accounts: AccountRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) accounts.handleDeepLink(intent)
         keepSplashUntilThemeIsKnown()
         enableEdgeToEdge()
 
@@ -44,6 +50,12 @@ class MainActivity : ComponentActivity() {
                 JsCookBookApp()
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        // The sign-in link from the email, opened while the app is already running.
+        accounts.handleDeepLink(intent)
     }
 
     /** Holds the system splash for the few ms it takes to read the saved theme, so dark mode never flashes light. */

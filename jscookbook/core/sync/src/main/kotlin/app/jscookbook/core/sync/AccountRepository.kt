@@ -3,6 +3,8 @@ package app.jscookbook.core.sync
 import android.content.Intent
 import app.jscookbook.core.data.sync.LocalSync
 import io.github.jan.supabase.auth.OtpType
+import io.github.jan.supabase.compose.auth.ComposeAuth
+import io.github.jan.supabase.compose.auth.composeAuth
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.handleDeeplinks
 import io.github.jan.supabase.auth.providers.builtin.OTP
@@ -28,6 +30,9 @@ class AccountRepository @Inject constructor(
     private val local: LocalSync,
 ) {
     val googleSignInAvailable: Boolean get() = backend.config.hasGoogleSignIn
+
+    /** For the native Google sign-in button (Credential Manager), when configured. */
+    val composeAuth: ComposeAuth? get() = backend.client?.takeIf { googleSignInAvailable }?.composeAuth
 
     val account: Flow<Account> = backend.client?.let { client ->
         client.auth.sessionStatus.map { status ->

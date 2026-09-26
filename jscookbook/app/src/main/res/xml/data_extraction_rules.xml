@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Phase 0 has only settings to back up. Phase 2 revisits this once the synced database exists. -->
+<!--
+  Recipes, photos and settings are backed up. The sign-in session (kept in shared preferences) is
+  not: a restored phone signs in again instead of reusing another device's tokens.
+-->
 <data-extraction-rules>
-    <cloud-backup />
-    <device-transfer />
+    <cloud-backup>
+        <exclude domain="sharedpref" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="." />
+    </device-transfer>
 </data-extraction-rules>

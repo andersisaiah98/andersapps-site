@@ -16,3 +16,6 @@ local.properties
 keystore.properties
 *.jks
 *.keystore
+# Exception: the shared *debug* key (public, well-known password "android"), so debug APKs built
+# on CI and on your machine are signed alike and install over each other. Never the release key.
+!app/debug.keystore

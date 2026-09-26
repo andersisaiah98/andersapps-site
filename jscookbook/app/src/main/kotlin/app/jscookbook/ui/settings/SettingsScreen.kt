@@ -78,6 +78,7 @@ fun SettingsRoute(
         versionLabel = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
         loadFontLicenses = rememberFontLicenseLoader(),
         contentPadding = contentPadding,
+        syncContent = { SyncSettingsRoute() },
     )
 }
 
@@ -91,6 +92,8 @@ fun SettingsScreen(
     loadFontLicenses: () -> String,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
+    /** Account, household and sync status (see SyncSettings.kt). */
+    syncContent: @Composable ColumnScope.() -> Unit = {},
 ) {
     var showLicenses by rememberSaveable { mutableStateOf(false) }
     Column(
@@ -103,21 +106,7 @@ fun SettingsScreen(
     ) {
         ScreenTitle("Settings")
 
-        SettingsGroup("Account") {
-            SettingsRow(
-                icon = JsIcons.Person,
-                title = "Sign in",
-                subtitle = "Google, or an email link",
-                onClick = { showMessage("Sign-in arrives with sync in Phase 2.") },
-            )
-            RowDivider()
-            SettingsRow(
-                icon = JsIcons.People,
-                title = "Household sharing",
-                subtitle = "One cook book on both phones",
-                onClick = { showMessage("Household sharing arrives in Phase 2.") },
-            )
-        }
+        syncContent()
 
         SettingsGroup("Appearance") {
             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -140,14 +129,6 @@ fun SettingsScreen(
                 title = "Export & backup",
                 subtitle = "Everything as JSON plus a photos zip",
                 onClick = { showMessage("Export arrives in a later phase.") },
-            )
-            RowDivider()
-            SettingsRow(
-                icon = JsIcons.Cloud,
-                title = "Sync",
-                subtitle = "This phone only for now",
-                onClick = null,
-                trailing = { StatusDot() },
             )
         }
 
@@ -219,7 +200,7 @@ private fun VersionRow(versionLabel: String, onUnlock: () -> Unit) {
 }
 
 @Composable
-private fun SettingsGroup(title: String, content: @Composable ColumnScope.() -> Unit) {
+internal fun SettingsGroup(title: String, content: @Composable ColumnScope.() -> Unit) {
     Column {
         Text(
             title.uppercase(),
@@ -232,7 +213,7 @@ private fun SettingsGroup(title: String, content: @Composable ColumnScope.() -> 
 }
 
 @Composable
-private fun SettingsRow(
+internal fun SettingsRow(
     icon: ImageVector,
     title: String,
     subtitle: String?,
@@ -272,7 +253,7 @@ private fun SettingsRow(
 }
 
 @Composable
-private fun IconBadge(icon: ImageVector) {
+internal fun IconBadge(icon: ImageVector) {
     Box(
         Modifier
             .size(40.dp)
@@ -285,16 +266,16 @@ private fun IconBadge(icon: ImageVector) {
 }
 
 @Composable
-private fun StatusDot() {
+internal fun StatusDot(label: String, color: androidx.compose.ui.graphics.Color = JsTheme.colors.outline) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(
             Modifier
                 .size(8.dp)
                 .clip(CircleShape)
-                .background(JsTheme.colors.outline),
+                .background(color),
         )
         Text(
-            "Local",
+            label,
             style = JsTheme.typography.labelMedium,
             color = JsTheme.colors.onSurfaceVariant,
             modifier = Modifier.padding(start = 6.dp),
@@ -303,6 +284,6 @@ private fun StatusDot() {
 }
 
 @Composable
-private fun RowDivider() {
+internal fun RowDivider() {
     HorizontalDivider(color = JsTheme.colors.outlineVariant, modifier = Modifier.padding(start = 70.dp))
 }
