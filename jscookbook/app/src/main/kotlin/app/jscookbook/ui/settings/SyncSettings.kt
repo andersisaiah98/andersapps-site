@@ -63,7 +63,8 @@ fun SyncSettingsRoute(viewModel: SyncSettingsViewModel = hiltViewModel()) {
                 )
             },
         )
-        { google.startFlow() }
+        val start: () -> Unit = { google.startFlow() }
+        start
     }
 
     SyncSettings(
